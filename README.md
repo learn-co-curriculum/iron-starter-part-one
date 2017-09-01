@@ -44,6 +44,34 @@ We will be using the basic skeleton React app we used in the previous lesson. So
 
 We also have tests set up for Actions, Reducers and Components. These will not be working at the moment, but we will add some basic files and folders to get these working so you can follow along with the tests as we code this out. 
 
+lets add the following folders and files to our `/client/src` to get started.
+
+``` 
+/client/src 
+-----------
+|- actions 
+|       \_ apiRequestStatus.js
+|       \_ campaigns.js
+|- components
+|       \_ CampaignCard.js
+|       \_ Home.js
+|- containers
+|       \_ CampaignDetail.js
+|       \_ Campaigns.js
+|       \_ CreateCampaignForm.js 
+|       \_ EditCampaignForm.js 
+|- reducers 
+|       \_ campaignsReducer.js
+|       \_ apiRequestStatusReducer.js
+|- store.js 
+| ........
+```
+
+These files can just be blank for now, as we build this app out we will add the code we need.
+
+
+
+
 ### Summary
 
 In this lesson we learned how to use React, Redux, React Router Dom and Redux Thunk to build a fully featured React app that connect to a custom built Rails API. This has been intense adventure, and we've learned a ton. In the next lab we are going to be building out the comments section of the app, so take a breather and get ready to finish our Iron Starter MVP. 
