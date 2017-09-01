@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import uuid from 'uuid';
-import reducer from '../../src/reducers/campaigns';
+import reducer from '../../src/reducers/campaignsReducer';
 
 describe('Campaigns Reducer', () => {
     let firstCampaignId;
@@ -18,12 +18,11 @@ describe('Campaigns Reducer', () => {
                 description: 'First Description',
                 goal: 450000,
                 pledged: 45,
-                deadline: new Date(),
                 created_at: new Date(),
                 updated_at: new Date(),
                 comments: [
-                    { id: uuid(), content: 'First Comment', created_at: "2017-08-28T20:33:07.449Z", updated_at: "2017-08-28T20:33:07.449Z", campaign_id: firstCampaignId },
-                    { id: uuid(), content: 'Second Comment', created_at: "2017-08-28T20:33:07.449Z", updated_at: "2017-08-28T20:33:07.449Z", campaign_id: firstCampaignId }
+                    { id: uuid(), content: 'First Comment', created_at: "2017-08-28T20:33:07.449Z", updated_at: "2017-08-28T20:33:07.449Z" },
+                    { id: uuid(), content: 'Second Comment', created_at: "2017-08-28T20:33:07.449Z", updated_at: "2017-08-28T20:33:07.449Z" }
                 ]
             },
             {
@@ -32,7 +31,6 @@ describe('Campaigns Reducer', () => {
                 description: 'Second Description',
                 goal: 20000,
                 pledged: 10000,
-                deadline: new Date(),
                 created_at: new Date(),
                 updated_at: new Date(),
                 comments: []
@@ -59,7 +57,6 @@ describe('Campaigns Reducer', () => {
             description: 'Test Description',
             goal: 5000,
             pledged: 0,
-            deadline: new Date(),
             created_at: new Date(),
             updated_at: new Date(),
             comments: []
