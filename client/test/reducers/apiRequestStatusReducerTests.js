@@ -30,7 +30,7 @@ describe('APIRequestStatus Reducer', () => {
         }, { type: 'SUCCESSFUL_API_REQUEST' })).to.deep.equal(initialState);
     });
 
-    it('should handle SUCCESSFUL_API_REQUEST', () => {
+    it('should handle UNSUCCESSFUL_API_REQUEST', () => {
         expect(reducer({
             makingAPIRequest: true,
             failedLastAPIRequest: false,
