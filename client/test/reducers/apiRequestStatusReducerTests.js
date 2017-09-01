@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import reducer from '../../src/reducers/apiRequestStatusReducer'
+import reducer from '../../src/reducers/apiRequestStatusReducer.js'
 
 describe('APIRequestStatus Reducer', () => {
 
