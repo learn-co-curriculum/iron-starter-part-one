@@ -236,7 +236,7 @@ Next we use the `createStore` function and pass in the reducers and Redux devtoo
 
 To connect our React app to the store. We will need to use the __Provider__ component supplied by __React Redux__ and pass it the prop of `store` using an imported store from the `store.js` file we just created. 
 
-```javascript 
+```jsx 
 // ./src/index.js
 
 import React from 'react';
@@ -274,7 +274,7 @@ Yay!! We've successfully set up our store.
 
 Now that we've set up our store we need to add some basic routes in our `App` Component. One route that renders a `Home` component for the `/` route and a `Campaigns` for the `/campaigns` route. Open up `App.js` and add the following code:
 
-```javascript
+```jsx
 // ./src/App.js
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'; 
@@ -309,7 +309,7 @@ So with this code we are importing __Router, Route & Link__ from __React Router 
 
 #### Home Component
 
-```javascript 
+```jsx 
 // ./components/Home.js
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -329,7 +329,7 @@ export default Home;
 
 #### CampaignsComponent 
 
-```javascript
+```jsx
 // ./containers/Campaigns.js
 import React, { Component } from 'react';
 
@@ -409,7 +409,7 @@ export const removeCampaign = campaignId => {
 
 We've setup our __Action Creators__, but we still need to create our __Async Actions__ for the campaigns. This will require some imports at the top of the file and a constant variable to hold our API url.
 
-```javascript 
+```jsx 
 // ./src/actions/campaigns.js
 
 import { 
@@ -425,7 +425,7 @@ const API_URL = 'http://localhost:3001/api';
 
 Since Redux works synchronously, Async actions require middleware library that allows our Redux store to handle async actions. We've used [Redux Thunk](https://github.com/gaearon/redux-thunk) in previous labs, and a great tool for the current job. Before we can use this though, we need to apply it to our store using the `applyMiddleware()` function in our `store.js`:
 
-```javascript 
+```jsx 
 // ./src/store.js
 import { applyMiddleware, createStore, combineReducers } from 'redux' // <- Add applyMiddleware
 import thunk from 'redux-thunk'; // <- Import thunk
@@ -536,7 +536,7 @@ Take a few minutes to look at this code. Most of it should be familiar, but noti
 
 Now that we have our actions in place let's connect our Campaigns Component to Redux store.
 
-```javascript 
+```jsx 
 // ./src/containers/Campaigns.js
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -612,7 +612,7 @@ In the above code we are mapping `state.campaigns` as `campaigns` prop to the ca
 
 The CampaignCard component will be a very basic stateless component that just renders the individual info about a campaign to be displayed in a list. 
 
-```javascript 
+```jsx 
 // ./src/components/CampaignCard.js
 import React from 'react';
 import { campaignCardStyle } from '../styles';
@@ -637,7 +637,7 @@ If we go to `/campaigns` now in the browser it should display the new CampaignCa
 
 The `CampaignDetail` component needs to connect to the __Redux__ store to get information about a single Campaign. It will use the prop of `match.url.params.campaignId` passed down from __React Router DOM__ to find a campaign with a matching id in the stores list of campaigns. We will also need to add an `EditCampaignForm` component and import our `deleteCampaign` action. Let's add the following code to `CampaignDetail.js` :
 
-```javascript 
+```jsx 
 // ./src/containers/CampaignDetail.js
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -699,7 +699,7 @@ The `CampaignDetail` component should load in the browser now, but clicking on e
 We are going to create a `CampaignForm` component first that both the `CreateCampaignForm` and `EditCampaignForm` components can pass props down to. 
 The campaign form will take 4 required props (header, buttonTitle, onFormSubmit - callback function and history) and one optional (campaign). Here is the code for `CampaignForm`:
 
-```javascript
+```jsx
 // ./src/components/CampaignForm.js 
 
 import React, { Component } from 'react';
@@ -807,7 +807,7 @@ export default CampaignForm;
 
 This component is updating the state of an item upon input change and on submit is invoking the callback on `this.props.onFormSubmit` that we will be passing down from our connected `EditCampaignForm` and `CreateCampaignForm` components. Here is what those two components should look like:
 
-```javascript
+```jsx
 
 // ./src/containers/CreateCampaignForm.js 
 
