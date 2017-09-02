@@ -9,7 +9,7 @@
 
 Congratulations on making it this far. We've learned a ton about Rails 5 API template and connecting it to a client app with React. In this lesson we are going to be building a full CRUD app to see how to connect all of the tools that we've learned thus far. 
 
-To see the final app in action click [here](https://youtu.be/v5iyE9qFPmg) 
+To see the final app in action go to [Iron Starter App Video](https://youtu.be/v5iyE9qFPmg).
 
 Note: You can eitther follow along with the walkthrough below or let the tests guide you to complete the application. 
 
