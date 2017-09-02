@@ -6,7 +6,7 @@ import configureMockStore from 'redux-mock-store';
 import 'isomorphic-fetch';
 import { setCampaigns, addCampaign, removeCampaign, replaceCampaign, fetchCampaigns, fetchCampaign, createCampaign, updateCampaign, deleteCampaign } from '../../src/actions/campaigns';
 
-describe('Campaigns Action', () => {
+describe('Campaigns Actions', () => {
 
     let campaign;
     let campaigns;
@@ -41,8 +41,8 @@ describe('Campaigns Action', () => {
 
     describe('Action Creators', () => {
 
-        describe('setCampaigns(campaigns: Array<Campaign>', () => {
-            it('should return an Object with a SET_CAMPAIGNS type and Campaigns: Array<Campaign>', () => {
+        describe('setCampaigns', () => {
+            it('should return an Object with SET_CAMPAIGNS type and Campaigns Array', () => {
                 expect(setCampaigns(campaigns)).to.deep.equal({
                     type: 'SET_CAMPAIGNS',
                     campaigns
@@ -50,8 +50,8 @@ describe('Campaigns Action', () => {
             });
         });
 
-        describe('addCampaign(Campaign: Object)', () => {
-            it("should return an Object with a 'ADD_CAMPAIGN' type and a Campaign: Object", () => {
+        describe('addCampaign', () => {
+            it("should return an Object with ADD_CAMPAIGN type and a Campaign Object", () => {
                 expect(addCampaign(campaign)).to.deep.equal({
                     type: 'ADD_CAMPAIGN', 
                     campaign,
@@ -59,8 +59,8 @@ describe('Campaigns Action', () => {
             });
         });
 
-        describe('replaceCampaign(Campaign: Object)', () => {
-            it("should return an Object with a 'REPLACE_CAMPAIGN' type and a Campaign: Object", () => {
+        describe('replaceCampaign', () => {
+            it("should return an Object with REPLACE_CAMPAIGN type and a Campaign Object", () => {
                 expect(replaceCampaign(campaign)).to.deep.equal({
                     type: 'REPLACE_CAMPAIGN',
                     campaign,
@@ -68,8 +68,8 @@ describe('Campaigns Action', () => {
             });
         });
 
-        describe('removeCampaign(campaignId: Number)', () => {
-            it("should return an Object with a 'REMOVE_CAMPAIGN' type", () => {
+        describe('removeCampaign', () => {
+            it("should return an Object with REMOVE_CAMPAIGN type", () => {
                 expect(removeCampaign(campaign.id)).to.deep.equal({
                     type: 'REMOVE_CAMPAIGN', 
                     campaignId: campaign.id
@@ -101,8 +101,8 @@ describe('Campaigns Action', () => {
     
         afterEach(() => nock.cleanAll());
     
-        describe('fetchCampaigns()', () => {
-            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST and SET_CAMPAIGNS action types', () => {
+        describe('fetchCampaigns', () => {
+            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST & SET_CAMPAIGNS types', () => {
                 nock(url)
                     .get(`/campaigns`)
                     .reply(200, campaigns);
@@ -114,23 +114,9 @@ describe('Campaigns Action', () => {
                     ]));
             });
         });
-
-        describe('fetchCampaign()', () => {
-            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST and SET_CAMPAIGNS action types', () => {
-                nock(url)
-                    .get(`/campaigns/${campaign.id}`)
-                    .reply(200, campaign);
     
-                return store.dispatch(fetchCampaign(campaign.id))
-                    .then(() => expect(store.getActions()).to.deep.equal([
-                        ...requiredActionCreators,
-                        { type: 'SET_CAMPAIGNS', campaigns: [campaign] }
-                    ]));
-            });
-        });
-    
-        describe('createCampaign(campaign: Object)', () => {
-            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST and ADD_CAMPAIGN action types', () => {
+        describe('createCampaign', () => {
+            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST & ADD_CAMPAIGN types', () => {
                 const newCampaign = Object.assign({}, campaign, { id: uuid(), title: 'hi' })
     
                 nock(url)
@@ -145,8 +131,8 @@ describe('Campaigns Action', () => {
             });
         });
     
-        describe('updateCampaign(campagin: Object', () => {
-            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST and REPLACE_CAMPAIGN action types', () => {
+        describe('updateCampaign', () => {
+            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST & REPLACE_CAMPAIGN types', () => {
                 const updatedCampaign = Object.assign({}, campaign, { title: 'Updated Title' });
                 
                 nock(url)
@@ -161,8 +147,8 @@ describe('Campaigns Action', () => {
             });
         });
     
-        describe('deleteCampaign(campaignId: Number)', () => {
-            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST and REMOVE_CAMPAIGN action types', () => {
+        describe('deleteCampaign', () => {
+            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST & REMOVE_CAMPAIGN types', () => {
                 nock(url)
                     .delete(`/campaigns/${campaign.id}`)
                     .reply(204);
@@ -176,4 +162,3 @@ describe('Campaigns Action', () => {
         });
     });
 });
-
