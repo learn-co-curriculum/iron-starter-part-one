@@ -2,20 +2,20 @@
 
 ## Objectives
 
-* Build React APP with CRUD for Campaigns using React, Redux & React Router Dom
+* Build React CRUD App using React, Redux & React Router Dom
 * Integrate Redux Thunk into Redux Store to handle async API calls
 
 ## Introduction:
 
 Congratulations on making it this far. We've learned a ton about Rails 5 API template and connecting it to a client app with React. In this lesson we are going to be building a full CRUD app to see how to connect all of the tools that we've learned thus far. 
 
-To see the final app in action go to [Iron Starter App Video](https://youtu.be/v5iyE9qFPmg).
+This is the app we will be building in the next couple lessons. [Iron Starter App Video](https://youtu.be/v5iyE9qFPmg)
 
 Note: You can eitther follow along with the walkthrough below or let the tests guide you to complete the application. 
 
 ## Instructions 
 
-To get started we need to set up our API server and our client server. Let's do the API first. 
+We need to set up the servers for the API and React app to get started.
 
 ### API Server Setup
 
@@ -26,7 +26,7 @@ rails db:migrate
 rails server -p 3001 
 ``` 
 
-We can also run `rspec `just to double check that all of our API tests are passing. If everything is good to go let's setup the Client server. 
+We can also run `rspec `just to double check that all of the API tests are passing. If everything is good to go let's setup the Client server. 
 
 ### Client Server Setup 
 
@@ -36,21 +36,18 @@ npm install
 npm start
 ```
 
-This should open the browser to localhost:3000 and show `Iron Starter` in the header div tag. 
+This should open the browser to localhost:3000 and show `Iron Starter` in the header div tag. There is a test watcher if we use the `npm test` command.
 
 ### CRUD Life 
 
 In this walkthrough we are going to be building a full CRUD app using React, Redux and React Router DOM that consumes Campaign objects from our Iron Start API. 
 
-We will be using the basic skeleton React app we used in the previous lesson. So we should just have a `/client/src/index.js` file to mount our app & a `/client/src/App.js` file for our App component. 
+We are using a basic skeleton React app from the previous lesson. It contains a `index.js` file to mount the app & a `App.js` file for the App component. 
 
-We also have tests set up for Actions, Reducers and Components. These will not be working at the moment, but we will add some basic files and folders to get these working so you can follow along with the tests as we code this out. 
-
-lets add the following folders and files to our `/client/src` to get started.
-
+We also have tests set up for the required Actions, Reducers and Components. These tests are not working at the moment, because we need to add the following files and folders:
 ``` 
-/client/src 
------------
+/src 
+----
 |- actions 
 |       \_ apiRequestStatus.js
 |       \_ campaigns.js
@@ -70,13 +67,13 @@ lets add the following folders and files to our `/client/src` to get started.
 | ........
 ```
 
-These files can just be blank for now, as we build this app out we will add the code we need.
+These files can just be blank for now, as we build this app out we will add the necessary code.
 
 ### Setting up the Redux Store
 
-It's always a good idea to imagine what the state of an application will look like before one starts to build the components. 
+It's always a good idea to imagine what the state of an application will look like before building the actions and reducers.
 
-The state for this application is essentially an array of campaigns with their nested comments and an object that monitors that status of API Requests. Here is an example of what the redux store's state should look like. 
+The state for this application is essentially an array of campaigns with their nested comments and an object that monitors the status of API Requests. Here is an example of what the __Redux__ store's state should look like. 
 
 ```javascript
 {
@@ -88,43 +85,24 @@ The state for this application is essentially an array of campaigns with their n
         {
             id: 1,
             title: 'First Title', 
-            description: 'First Description',
-            goal: 450000,
-            pledged: 45,
-            created_at: "2017-08-28T20:33:07.449Z",
-            updated_at: "2017-08-28T20:33:07.449Z",
-            comments: [
-                { 
-                    id: 1, 
-                    content: 'First Comment', 
-                    created_at: "2017-08-28T20:33:07.449Z", 
-                    updated_at: "2017-08-28T20:33:07.449Z", 
-                },
-                { 
-                    id: 2, 
-                    content: 'Second Comment', 
-                    created_at: "2017-08-28T20:33:07.449Z", 
-                    updated_at: "2017-08-28T20:33:07.449Z" 
-                }
-            ]
-        },
-        {
-            id: 2,
-            title: 'Second Title',
             description: 'Second Description',
             goal: 20000,
             pledged: 10000,
             created_at: "2017-08-28T20:33:07.449Z",
             updated_at: "2017-08-28T20:33:07.449Z",
-            comments: []
-        }
+            comments: [
+                {...}, {...}
+            ]
+        },
+        { ... }
     ];
 }
 ```
 
-Looking at the big picture of the app gives us an idea how to manage our reducers and set up store. Let's go ahead and set up our store. Our application already includes all of the node modules for React, Redux, React Redux and React Router DOM. Just make sure to run `npm install` to activate them all. 
+Looking at the required state of an app gives us a better idea of how to setup our reducers store. Let's go ahead and set up our store. We've already included the React, Redux, React Redux and React Router DOM libraries in oure `package.json`. Just make sure to run `npm install` to activate them.
 
-Let's start with creating the store creating two basic reducers in our `./reducers/apiRequestStatusReducer.js` & `./reducers/campaignsReducer.js` files. Lets do the easy one first (APIRequestStatusReducer) and handle the three possible action types `['MAKING_API_REQUEST', 'SUCCESSFUL_API_REQUEST', 'UNSUCCESSFUL_API_REQUEST']`
+#### APIRequestStatusReducer
+We should start by creating our APIRequestStatusReducer and CampaignsReducer. It is easier to start with the APIRequestStatusReducer, as it is simpler and only handles 3 action types: `['MAKING_API_REQUEST', 'SUCCESSFUL_API_REQUEST', 'UNSUCCESSFUL_API_REQUEST']`
 
 ```javascript
 // ./reducers/apiRequestStatusReducer.js
@@ -137,26 +115,17 @@ const initialState = {
 export default (state = initialState, action) => {
     switch(action.type) {
 
-        case 'MAKING_API_REQUEST': {
-            return {
-                ...state,
-                makingAPIRequest: true
-            };
-        };
+        case 'MAKING_API_REQUEST':
+            return Object.assign({}, state, { makingAPIRequest: true });
 
-        case 'SUCCESSFUL_API_REQUEST': {
-            return {
-                ...state,
-                makingAPIRequest: false
-            };
-        };
+        case 'SUCCESSFUL_API_REQUEST':
+            return Object.assign({}, state, { makingAPIRequest: false });
 
-        case 'UNSUCCESSFUL_API_REQUEST': {
+        case 'UNSUCCESSFUL_API_REQUEST':
             return {
                 makingAPIRequest: false,
                 failedLastAPIRequest: true,
             };
-        };
 
         default: 
             return state;
@@ -164,11 +133,11 @@ export default (state = initialState, action) => {
 };
 ```
 
-This will now set our initial state of the apiRequestStatusReducer to now equal `{ makingAPIRequest: false, failedLastAPIRequest: false, };`. We also added in action types that will handle the making and successful/unsuccessful return of request to our API. If we run `npm test` we should now have 4 tests passing for the `APIRequestStatus Reducer` block. 
+In the code above, we set the initial state of the APIRequestStatusReducer to equal `{ makingAPIRequest: false, failedLastAPIRequest: false, };`. We also added cases for the various action types that will handle our API request. 
 
-Next we want to handle the reducer state for campaigns. For this we need to handle setting campaigns, adding campaigns, updating/replacing campaigns and removing campaigns. The 4 action types should look like `['SET_CAMPAIGNS', 'ADD_CAMPAIGN', 'REPLACE_CAMPAIGN', 'REMOVE_CAMPAIGN']`. 
+#### CampaignsReducer
 
-Let's go ahead and build out the `./reducers/campaignsReducer.js' file:
+Next we need to setup the CampaignsReducer. This reducers requires case statements for the handling the following action types: `['SET_CAMPAIGNS', 'ADD_CAMPAIGN', 'REPLACE_CAMPAIGN', 'REMOVE_CAMPAIGN']`. 
 
 ```javascript
 // ./reducers/campaignsReducer.js
@@ -178,13 +147,11 @@ import commentsReducer from './commentsReducer';
 export default (state = [], action) => {
     switch(action.type) {
 
-        case 'SET_CAMPAIGNS': {
+        case 'SET_CAMPAIGNS':
             return action.campaigns;
-        };
 
-        case 'ADD_CAMPAIGN': {
+        case 'ADD_CAMPAIGN':
             return state.concat(action.campaign);
-        };
 
         case 'REPLACE_CAMPAIGN': {
             const index = state.findIndex(campaign => campaign.id === action.campaign.id);
@@ -205,21 +172,18 @@ export default (state = [], action) => {
             ];
         };
         
-        default: {
+        default:
             return state;
-        };
     };
 };
 
 ```
 
-As we've covered actions and reducers in the Redux section of the course. We will just briefly go over this code. Basically we have 4 cases one handling the unqiue action types and return a new copy of state with slight changes, such as removing or replacing a campaign. If we run the `npm test` command we should now have 9 tests passing. 
-
 ### Add Reducers to the Redux Store 
 
-Now that we have our two reducers it is time to setup our store and connect it to our React app. This will require the __Redux__, __React Redux__ library which have already been included in our package.json, so we should have access to these already. 
+Now that we have our two reducers defined we should setup our store and connect it to our React app.
 
-Open the `./store.js` file and let's add the following code. 
+Open the `store.js` file and add the following code:
 
 ```javascript 
 // ./store.js
@@ -238,7 +202,7 @@ export default createStore(
 );
 ```
 
-On the first 3 lines we are importing the `createStore`, `combineReducers`, and our reducer  functions to setup our app state. We then defined a variable called `reducers` that merged in the state of the `apiRequestStatus` reducer and the `campaigns` reducer. We imported the names as `apiRequestStatus` and `campaigns`, because we want our state to look like
+Let's take a moment to review this code. On the first 3 lines we are importing the `createStore`, `combineReducers`, and reducer functions. We then defined a variable called `reducers` that combines our  `apiRequestStatus` reducer and the `campaigns` reducer. Make note that we imported the names as `apiRequestStatus` and `campaigns`, because we want our state to look like
 
 ```javascript
 {
@@ -264,13 +228,13 @@ instead of
 }
 ``` 
 
-The first one is more succinct than the other. 
+The first one is more succinct than the other, and much easier to read. 
 
-Next we are using the `createStore()` function as our default export and passing in the reducers and Redux devtools initializer. This is also where we would apply middleware (think Redux Thunk), if and when we need it. Now all we have to do is import this file from anywhere in our app and it will instantiate the Redux store for us. 
+Next we use the `createStore` function and pass in the reducers and Redux devtools initializer. This is also where we would apply middleware (think Redux Thunk), if and when we need it. The `createStore` will be the default export value of this file, so we just need to import this file when we need to instantiate the store. 
 
 ### Connecting the Store to our App
 
-Let's go to our `./src/index.js` file and add the store to the React app. We will need to use the __Provider__ component supplied by __React Redux__ and pass it the prop of `store` using and import of the `store.js` file we just created. 
+To connect our React app to the store. We will need to use the __Provider__ component supplied by __React Redux__ and pass it the prop of `store` using an imported store from the `store.js` file we just created. 
 
 ```javascript 
 // ./src/index.js
@@ -292,7 +256,7 @@ ReactDOM.render(
 registerServiceWorker();
 ```
 
-Just to verify the store works. Lets add a `console.log(store.getState()` right before the `ReactDOM.render()` function in our `index.js` file. If we check out the dev console in Chrome, we should see this printed out:
+To verify the store works. Let's add a `console.log(store.getState()` right before the `ReactDOM.render()` function. If we check out the dev console in Chrome, we should see this printed out:
 
 ```javascript 
 {
@@ -304,11 +268,11 @@ Just to verify the store works. Lets add a `console.log(store.getState()` right 
 }
 ```
 
-We've successfully set up our store. Now it's time to use our store so we are able to Create, Read, Update and Delete campaigns. 
+Yay!! We've successfully set up our store.
 
 ### Master Routes
 
-Let's go to our `App.js` file and add a couple of routes to set us up with a Home component when we are at the root `/` route and a Campaigns component when we are at `/campaigns`. Open up the `App.js` and add the following code.
+Now that we've set up our store we need to add some basic routes in our `App` Component. One route that renders a `Home` component for the `/` route and a `Campaigns` for the `/campaigns` route. Open up `App.js` and add the following code:
 
 ```javascript
 // ./src/App.js
@@ -341,7 +305,9 @@ class App extends Component {
 export default App;
 ```
 
-Let's take a miniute to talk about this code. First we are import __Router, Route & Link__ from __React Router DOM__ to create a routing system with links, and trigger the loading of components when the url is at `/` & `/campaigns`. There is also an import of styles from the `styles.js` file, these are imported to add styling to the elements. Feel free to take a look at that file, if you are interested. This new code does break our app, because we are importing to __Components__ that do not exist. Let's add those now.
+So with this code we are importing __Router, Route & Link__ from __React Router DOM__ to create a routing system with links, and trigger the loading of components when the url is at `/` & `/campaigns`. There is also an import of styles from the `styles.js` file, these are imported to add styling to the elements. Feel free to take a look at that file, if you are interested. This new code will break the app, because we are importing __Components__ that do not exist yet. Let's add those now.
+
+#### Home Component
 
 ```javascript 
 // ./components/Home.js
@@ -359,7 +325,11 @@ const Home = () => {
 }
 
 export default Home;
+```
 
+#### CampaignsComponent 
+
+```javascript
 // ./containers/Campaigns.js
 import React, { Component } from 'react';
 
@@ -377,13 +347,13 @@ class Campaigns extends Component  {
 export default Campaigns;
 ```
 
-Try out the browser and see if the transitions from `/ - /campaigns` renders the new components correctly. So we are finished with the __Home__ Component, but the campaigns component seems like a good place to make API request to our backend to get Campaigns and then have it subscribe to the store for changes to `state.camapaigns`, but first we need to add a few Action Creators and an Async action request. 
+Try it out in the browser, and see if the transitions from `/ - /campaigns` renders the new components correctly. We are finished with the `Home` component, but the `Campaigns` component seems like a good place to make API request to get Campaigns and then subscribe to the store for changes to `state.camapaigns`, but first we need to add a few Action Creators and an Async action request. 
 
 ### Action Creators and Async Action Requests
 
-We are going to go ahead and build out all of the async actions and action creators we need, before finishing up the components. Again there are tests for all of these actions in the `./client/test/actions` directory. Feel free to follow along, or take a chance at solving these with the tests as a guide. 
+We should build out our Redux Actions before we finish our components. 
 
-First let's add actions for the APIRequestStatus. We need it to handle making an API request, a successful API request and an unsuccessful API request. 
+First let's add actions for the APIRequestStatus to handle  making an API request, a successful API request and an unsuccessful API request. 
 
 ```javascript 
 // ./src/actions/apiRequestStatus.js
@@ -402,9 +372,7 @@ export const unsuccessfulAPIRequest = () => {
 };
 ```
 
-All of the tests for __APIRequestStatus Action Creators__ shoud be passing now!
-
-Next we need to add the code to handle setting campaigns, adding a campaign, replacing a campaign and removing a campaign.
+Next we need to add the code to handle setting, adding, replacing & removing campaigns.
 
 ```javascript 
 // ./src/actions/campaigns.js
@@ -439,7 +407,7 @@ export const removeCampaign = campaignId => {
 };
 ```
 
-Now all of the tests for the campaigns __Action Creators__ should be passing, but we still need to create our __Async Actions__ for the campaigns. We will need to add some imports at the top of the file and create a constant variable to hold our API url.
+We've setup our __Action Creators__, but we still need to create our __Async Actions__ for the campaigns. This will require some imports at the top of the file and a constant variable to hold our API url.
 
 ```javascript 
 // ./src/actions/campaigns.js
@@ -452,10 +420,10 @@ import {
 
 const API_URL = 'http://localhost:3001/api';
 
-// ....
+// .... rest of code
 ```
 
-Now that we've imported the actions from our APIReqeustStatus actions file. We need to focus on building out our Async actions, but we have one problem. Redux works synchronously and Async actions, well that don't, hence the name. So we need to add in a middleware library that allows our Redux store to handle async actions. We've used [Redux Thunk](https://github.com/gaearon/redux-thunk) in previous labs, and that is a great tool for the job (it is already added to our package.json). Before we can use this though, we need to apply it to our store using the `applyMiddleware()` function. Let's go to `store.js` and add the needed code. 
+Since Redux works synchronously, Async actions require middleware library that allows our Redux store to handle async actions. We've used [Redux Thunk](https://github.com/gaearon/redux-thunk) in previous labs, and a great tool for the current job. Before we can use this though, we need to apply it to our store using the `applyMiddleware()` function in our `store.js`:
 
 ```javascript 
 // ./src/store.js
@@ -477,7 +445,7 @@ export default createStore(
 );
 ```
 
-Now we should be able to handle async actions. Let's go back to `./actions/campaigns` and add the following code. 
+Now we should be able to handle async actions. Let's go back to `./actions/campaigns.js` and add the following code. 
 
 ```javascript
 // ./src/actions/campaigns 
@@ -497,20 +465,6 @@ export const fetchCampaigns = () => {
             .catch(err => dispatch(unsuccessfulAPIRequest()));
     };
 };
-
-export const fetchCampaign = (campaignId) => {
-    return dispatch => {
-        dispatch(makingAPIRequest());
-        return fetch(`${API_URL}/campaigns/${campaignId}`)
-            .then(response => response.json())
-            .then(campaign => {
-                dispatch(successfulAPIRequest());
-                dispatch(setCampaigns([campaign]));
-            })
-            .catch(err => dispatch(unsuccessfulAPIRequest()));
-    };
-};
-
 
 export const createCampaign = (campaign, routerHistory) => {
     return dispatch => {
@@ -576,9 +530,11 @@ export const deleteCampaign = (campaignId, routerHistory) => {
 };
 ```
 
-Take a few minutes to look at this code. Most of it should be familiar, but notice that a few of the methods are being passed a `routerHistory` object that is then used to redirect upon completion. Also take a look at the test file `./test/actions/CampaignsActionsTests.js` to see how we used a mock API service to handle the fetch requests. This was set up to equal the same spec we used for our Rails API tests, so we knew what responses we would recieve. Now all of our Action tests should be passing. 
+Take a few minutes to look at this code. Most of it should be familiar, but notice that a few of the methods are being passed a `routerHistory` object that is then used to redirect upon completion. Also take a look at the test file `./test/actions/CampaignsActionsTests.js` to see how we used a mock API service to handle the fetch requests. This was set up to equal the same spec we used for our Rails API tests, so we know what responses we would recieve.
 
-Let's connect our Campaigns Component up to the store now and create a few new components. 
+### Connecting Campaigns Component To Redux
+
+Now that we have our actions in place let's connect our Campaigns Component to Redux store.
 
 ```javascript 
 // ./src/containers/Campaigns.js
@@ -650,7 +606,7 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, { fetchCampaigns })(Campaigns);
 ``` 
 
-In the above code we are mapping `state.campaigns` as `campaigns` prop to the campaigns component as well as passing the dispatch function `fetchCampaigns` that we are using in `componentDidMount` to get our campaigns. This code will not run at the moment, becuase we need to add the following components: CampaignCard, CampaignDetail and CreateCampaignForm. Let's add these components now.
+In the above code we are mapping `state.campaigns` as `campaigns` prop to the campaigns component. It is also passing the dispatch function `fetchCampaigns`, which we are using in `componentDidMount`. This code will not run at the moment, becuase we need to add the following components: `CampaignCard, CampaignDetail & CreateCampaignForm`.
 
 #### CampaignCard
 
@@ -675,7 +631,7 @@ const CampaignCard = ({ campaign, }) => {
 export default CampaignCard;
 ```
 
-If we go to `/campaigns` now in the browser it should display the new CampaignCard, but if we click on the card it will break because we need the CampaignDetail component to view an individual Campaign.
+If we go to `/campaigns` now in the browser it should display the new CampaignCard, but if we click on the card it will break, because we need the CampaignDetail component to view an individual Campaign.
 
 ### CampaignDetail
 
@@ -736,12 +692,12 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(mapStateToProps, { deleteCampaign })(CampaignDetail);
 ```
 
-Adding the following code should allow the `CampaignDetail` component to load in the browser, but clicking on edit will fail. Let's add the `CreateCampaignForm` and `EditCampaignForm` next'. 
+The `CampaignDetail` component should load in the browser now, but clicking on edit will fail. We need to crete the `CreateCampaignForm` and `EditCampaignForm` next'. 
 
 ### Campaign Forms
 
-So we are going to create a `CampaignForm` component first that both the `CreateCampaignForm` and `EditCampaignForm` components can pass props down to it. 
-The campaign form will take 4 required props (header, buttonTitle, onFormSubmit - callback function and history) and one optional (campaign). Here is what the code for `CampaignForm` should look like:
+We are going to create a `CampaignForm` component first that both the `CreateCampaignForm` and `EditCampaignForm` components can pass props down to. 
+The campaign form will take 4 required props (header, buttonTitle, onFormSubmit - callback function and history) and one optional (campaign). Here is the code for `CampaignForm`:
 
 ```javascript
 // ./src/components/CampaignForm.js 
@@ -888,10 +844,12 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(mapStateToProps, { updateCampaign })(EditCampaignForm);
 ```
 
-Now that these components are up, we should be able to view campaigns, create a new campaign, view an individual campaign, edit an existing campaign and delete a campaign. Are app is almost complete but does not show or allow the creation or deletion of comments. This will be done in the following lab, so be ready for a new challenge. Great job on following along and building a full stack CRUD app v1 is complete.
+Now that these components are up, we should be able to view campaigns, create a new campaign, view an individual campaign, edit an existing campaign and delete a campaign. Are app is almost complete, but we are not creating, viewing, or deleteing comments yet. This will be done in the following lab, so be ready for a new challenge. Great job on following along and building a full stack CRUD app v1 is complete.
 
 ### Summary
 
-In this lesson we learned how to use React, Redux, React Router Dom and Redux Thunk to build a fully featured React app that connect to a custom built Rails API. This has been intense adventure, and we've learned a ton. In the next lab we are going to be building out the comments section of the app, so take a breather and get ready to finish our Iron Starter MVP. 
+In this lesson we learned how to use React, Redux, React Router Dom and Redux Thunk to build a fully featured React app that connects to a custom built Rails API. This has been intense adventure, and we've learned a ton. In the next lab we are going to be building out the comments section of the app, so take a breather and get ready to finish our Iron Starter MVP. 
+
+![sleeping kitty](https://media.giphy.com/media/1ipNzZzpOav6w/giphy.gif)
 
 <p class='util--hide'>View <a href='https://learn.co/lessons/iron-starter-part-one'>Iron Starter Part One</a> on Learn.co and start learning to code for free.</p>
