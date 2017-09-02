@@ -49,20 +49,6 @@ export const fetchCampaigns = () => {
     };
 };
 
-export const fetchCampaign = (campaignId) => {
-    return dispatch => {
-        dispatch(makingAPIRequest());
-        return fetch(`${API_URL}/campaigns/${campaignId}`)
-            .then(response => response.json())
-            .then(campaign => {
-                dispatch(successfulAPIRequest());
-                dispatch(setCampaigns([campaign]));
-            })
-            .catch(err => dispatch(unsuccessfulAPIRequest()));
-    };
-};
-
-
 export const createCampaign = (campaign, routerHistory) => {
     return dispatch => {
         dispatch(makingAPIRequest());
