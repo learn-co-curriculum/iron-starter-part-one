@@ -82,10 +82,6 @@ describe('Campaigns Actions', () => {
         const url = 'http://localhost:3001/api';
         const middlewares = [thunk];
         const mockStore = configureMockStore(middlewares);
-        const requiredActionCreators = [
-            { type: 'MAKING_API_REQUEST' },
-            { type: 'SUCCESSFUL_API_REQUEST' }
-        ];
         const routerHistory = {
             replace(string) { return string }
         }
@@ -102,21 +98,20 @@ describe('Campaigns Actions', () => {
         afterEach(() => nock.cleanAll());
     
         describe('fetchCampaigns', () => {
-            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST & SET_CAMPAIGNS types', () => {
+            it('dispatches SET_CAMPAIGNS action type', () => {
                 nock(url)
                     .get(`/campaigns`)
                     .reply(200, campaigns);
     
                 return store.dispatch(fetchCampaigns())
                     .then(() => expect(store.getActions()).to.deep.equal([
-                        ...requiredActionCreators,
                         { type: 'SET_CAMPAIGNS', campaigns }
                     ]));
             });
         });
     
         describe('createCampaign', () => {
-            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST & ADD_CAMPAIGN types', () => {
+            it('dispatches ADD_CAMPAIGN action type', () => {
                 const newCampaign = Object.assign({}, campaign, { id: uuid(), title: 'hi' })
     
                 nock(url)
@@ -125,14 +120,13 @@ describe('Campaigns Actions', () => {
     
                 return store.dispatch(createCampaign(newCampaign, routerHistory))
                     .then(() => expect(store.getActions()).to.deep.equal([
-                        ...requiredActionCreators,
                         { type: 'ADD_CAMPAIGN', campaign: newCampaign }
                     ]));
             });
         });
     
         describe('updateCampaign', () => {
-            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST & REPLACE_CAMPAIGN types', () => {
+            it('dispatches REPLACE_CAMPAIGN action type', () => {
                 const updatedCampaign = Object.assign({}, campaign, { title: 'Updated Title' });
                 
                 nock(url)
@@ -141,21 +135,19 @@ describe('Campaigns Actions', () => {
     
                 return store.dispatch(updateCampaign(updatedCampaign, routerHistory))
                     .then(() => expect(store.getActions()).to.deep.equal([
-                        ...requiredActionCreators,
                         { type: 'REPLACE_CAMPAIGN', campaign: updatedCampaign }
                     ]));
             });
         });
     
         describe('deleteCampaign', () => {
-            it('dispatches MAKING_API_REQUEST, SUCCESSFUL_API_REQUEST & REMOVE_CAMPAIGN types', () => {
+            it('dispatches REMOVE_CAMPAIGN action type', () => {
                 nock(url)
                     .delete(`/campaigns/${campaign.id}`)
                     .reply(204);
     
                 return store.dispatch(deleteCampaign(campaign.id, routerHistory))
                     .then(() => expect(store.getActions()).to.deep.equal([
-                        ...requiredActionCreators,
                         { type: 'REMOVE_CAMPAIGN', campaignId: campaign.id }
                     ]));
             });
